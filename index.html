@@ -145,58 +145,59 @@
       box-shadow: 0 0 18px rgba(232,180,34,0.55);
     }
 
-    /* Housing — bun shell */
+    /* Housing — bun shell (landscape) */
     .ind-housing {
       position: relative;
-      width: 80px;
-      height: 156px;
-      border-radius: 40px;
-      background: linear-gradient(180deg,
-        #C88A3A 0%,
-        #9B6020 18%,
-        #1a1208 35%,
-        #1a1208 65%,
-        #9B6020 82%,
-        #C88A3A 100%
-      );
+      width: 164px;
+      height: 80px;
+      border-radius: 12px;
+      background:
+        linear-gradient(90deg, #B87830 0%, transparent 18%, transparent 82%, #B87830 100%),
+        linear-gradient(180deg,
+          #C88A3A 0%,
+          #9B6020 28%,
+          #1a1208 42%,
+          #1a1208 58%,
+          #9B6020 72%,
+          #C88A3A 100%
+        );
       border: 2px solid #A06828;
       box-shadow:
-        0 24px 48px rgba(0,0,0,0.85),
-        inset 0 3px 8px rgba(0,0,0,0.8),
-        inset 0 -3px 8px rgba(0,0,0,0.8),
-        inset 2px 0 6px rgba(0,0,0,0.5),
-        inset -2px 0 6px rgba(0,0,0,0.5);
+        0 16px 40px rgba(0,0,0,0.85),
+        inset 0 3px 6px rgba(0,0,0,0.8),
+        inset 0 -3px 6px rgba(0,0,0,0.8);
       display: flex;
-      justify-content: center;
+      align-items: center;
       padding: 8px;
       overflow: hidden;
       cursor: pointer;
     }
 
-    /* Sesame seeds on bun */
+    /* Sesame seeds on bun (top surface) */
     .ind-caution {
       position: absolute;
       top: 0; left: 0; right: 0;
       bottom: 0;
       pointer-events: none;
-      border-radius: 40px;
+      border-radius: 12px;
       background:
-        radial-gradient(ellipse 6px 3px at 22px 16px, rgba(200,150,60,0.55) 0%, transparent 100%),
-        radial-gradient(ellipse 5px 2.5px at 50px 22px, rgba(200,150,60,0.5) 0%, transparent 100%),
-        radial-gradient(ellipse 5px 2.5px at 35px 10px, rgba(200,150,60,0.45) 0%, transparent 100%),
-        radial-gradient(ellipse 6px 3px at 22px 138px, rgba(200,150,60,0.55) 0%, transparent 100%),
-        radial-gradient(ellipse 5px 2.5px at 50px 132px, rgba(200,150,60,0.5) 0%, transparent 100%),
-        radial-gradient(ellipse 5px 2.5px at 35px 146px, rgba(200,150,60,0.45) 0%, transparent 100%);
+        radial-gradient(ellipse 7px 2.5px at 38px 10px, rgba(200,150,60,0.55) 0%, transparent 100%),
+        radial-gradient(ellipse 6px 2.5px at 70px 6px, rgba(200,150,60,0.5) 0%, transparent 100%),
+        radial-gradient(ellipse 6px 2.5px at 110px 10px, rgba(200,150,60,0.45) 0%, transparent 100%),
+        radial-gradient(ellipse 7px 2.5px at 38px 70px, rgba(200,150,60,0.55) 0%, transparent 100%),
+        radial-gradient(ellipse 6px 2.5px at 70px 74px, rgba(200,150,60,0.5) 0%, transparent 100%),
+        radial-gradient(ellipse 6px 2.5px at 110px 70px, rgba(200,150,60,0.45) 0%, transparent 100%);
     }
 
-    /* Vertical rail — channel inside the bun */
+    /* Horizontal channel inside the bun */
     .ind-rail {
       position: absolute;
-      top: 14px; bottom: 14px;
-      width: 66px;
+      top: 10px; bottom: 10px;
+      left: 10px; right: 10px;
+      width: auto;
       background: #100c06;
-      border-radius: 33px;
-      box-shadow: inset 0 3px 10px rgba(0,0,0,0.9);
+      border-radius: 6px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.9);
       border: 1px solid rgba(80,50,10,0.3);
     }
     .ind-rail-line { display: none; }
@@ -205,8 +206,8 @@
     .ind-handle {
       position: relative;
       z-index: 10;
-      width: 64px;
-      height: 82px;
+      width: 58px;
+      height: 56px;
       cursor: grab;
       user-select: none;
       touch-action: none;
@@ -240,20 +241,7 @@
     .ind-grip, .ind-grip-line, .ind-handle-text,
     .ind-text-off, .ind-text-on { display: none; }
 
-    /* OFF / ON side labels */
-    .ind-side-label {
-      position: absolute;
-      font-size: 6.5px;
-      color: rgba(200,150,60,0.45);
-      font-family: 'Courier New', monospace;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      pointer-events: none;
-    }
-    .ind-label-off { top: 24px; right: 4px; }
-    .ind-label-on  { bottom: 24px; right: 4px; }
+    .ind-side-label { display: none; }
 
     /* Floor shadow reflection */
     .ind-reflection {
@@ -950,7 +938,7 @@
             <div class="ind-rail"><div class="ind-rail-line"></div></div>
             <div class="ind-handle" id="indHandle">
               <div class="ind-handle-inner handle-on" id="indHandleInner">
-                <svg class="ind-hotdog-svg" viewBox="0 0 64 82" width="64" height="82" xmlns="http://www.w3.org/2000/svg">
+                <svg class="ind-hotdog-svg" viewBox="0 0 64 82" width="58" height="56" style="transform:rotate(90deg)" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <linearGradient id="sw-bun" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stop-color="#D4924A"/>
@@ -1326,19 +1314,19 @@
       const stateEl   = document.getElementById('switchState');
       const descEl    = document.getElementById('switchDesc');
 
-      // MAX_TRAVEL = housing-height(156) - 2*border(4) - 2*padding(16) - handle-height(82) = 54px
-      const MAX_TRAVEL = 54;
+      // MAX_TRAVEL = housing-width(164) - 2*border(4) - 2*padding(16) - handle-width(58) = 86px
+      const MAX_TRAVEL = 86;
       let isOn         = true;   // start ON
       let isDragging   = false;
       let hasMoved     = false;
-      let startY       = 0;
-      let startTY      = MAX_TRAVEL; // current translateY
-      let currentTY    = MAX_TRAVEL;
+      let startX       = 0;
+      let startTX      = MAX_TRAVEL; // ON = right
+      let currentTX    = MAX_TRAVEL;
 
       function setVisualState(on) {
-        currentTY = on ? MAX_TRAVEL : 0;
+        currentTX = on ? MAX_TRAVEL : 0;
         handle.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        handle.style.transform  = `translateY(${currentTY}px)`;
+        handle.style.transform  = `translateX(${currentTX}px)`;
 
         if (on) {
           led.classList.add('led-on');
@@ -1360,8 +1348,8 @@
         isOn = on;
       }
 
-      // Initialise
-      handle.style.transform = `translateY(${MAX_TRAVEL}px)`;
+      // Initialise at ON (right)
+      handle.style.transform = `translateX(${MAX_TRAVEL}px)`;
       handle.style.transition = 'none';
 
       // ── Drag ────────────────────────────────────
@@ -1369,25 +1357,25 @@
         e.preventDefault();
         isDragging = true;
         hasMoved   = false;
-        startY     = e.clientY;
-        startTY    = currentTY;
+        startX     = e.clientX;
+        startTX    = currentTX;
         handle.style.transition = 'none';
         handle.setPointerCapture(e.pointerId);
       });
 
       handle.addEventListener('pointermove', function(e) {
         if (!isDragging) return;
-        const dy = e.clientY - startY;
-        if (Math.abs(dy) > 4) hasMoved = true;
-        currentTY = Math.max(0, Math.min(MAX_TRAVEL, startTY + dy));
-        handle.style.transform = `translateY(${currentTY}px)`;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 4) hasMoved = true;
+        currentTX = Math.max(0, Math.min(MAX_TRAVEL, startTX + dx));
+        handle.style.transform = `translateX(${currentTX}px)`;
       });
 
       handle.addEventListener('pointerup', function() {
         if (!isDragging) return;
         isDragging = false;
         if (hasMoved) {
-          setVisualState(currentTY > MAX_TRAVEL / 2);
+          setVisualState(currentTX > MAX_TRAVEL / 2);
         } else {
           setVisualState(!isOn);
         }
