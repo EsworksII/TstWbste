@@ -1,0 +1,1530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connor's Weenies — Big Flavor. Good Times.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #C8241F;
+      --red-hover: #E02B26;
+      --mustard: #E8B422;
+      --cream: #F4EFE6;
+      --dark: #0B0B0B;
+      --dark-2: #131313;
+      --dark-3: #1C1C1C;
+      --dark-4: #242424;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    /* ─── UTILITIES ─────────────────────────────── */
+    .font-display  { font-family: 'Alfa Slab One', serif; }
+    .font-ui       { font-family: 'Barlow Condensed', sans-serif; }
+
+    .label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mustard);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .label::before, .label::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: currentColor;
+    }
+    .label--left::before  { display: none; }
+    .label--left::after   { display: block; }
+
+    /* ─── BUTTONS ────────────────────────────────── */
+    .btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s ease, background 0.18s ease;
+      outline: none;
+    }
+    .btn:focus-visible { outline: 2px solid var(--mustard); outline-offset: 3px; }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(200,36,31,0.35), 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .btn-red:hover  { background: var(--red-hover); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,36,31,0.5); }
+    .btn-red:active { transform: translateY(0); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cream);
+      border: 1.5px solid rgba(244,239,230,0.25);
+    }
+    .btn-outline:hover  { border-color: var(--mustard); color: var(--mustard); transform: translateY(-2px); }
+    .btn-outline:active { transform: translateY(0); }
+
+    .btn-white {
+      background: #fff;
+      color: var(--red);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    }
+    .btn-white:hover  { background: var(--cream); transform: translateY(-2px); box-shadow: 0 14px 48px rgba(0,0,0,0.4); }
+    .btn-white:active { transform: translateY(0); }
+
+    /* ─── INDUSTRIAL SWITCH ─────────────────────── */
+    .hero-switch-area {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 2.25rem;
+      opacity: 0;
+      animation: riseIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.75s both;
+    }
+
+    /* Outer wrapper — holds LED + housing + reflection */
+    .ind-outer {
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Status LED bar above housing */
+    .ind-led {
+      position: relative;
+      z-index: 5;
+      width: 52px;
+      height: 8px;
+      border-radius: 100px;
+      background: #451a1a;
+      border: 1px solid #0a0a0a;
+      margin-bottom: -4px; /* overlap housing top */
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+    }
+    .ind-led.led-on {
+      background: #10b981;
+      box-shadow: 0 0 18px rgba(16,185,129,0.55);
+    }
+
+    /* Housing */
+    .ind-housing {
+      position: relative;
+      width: 80px;
+      height: 156px;
+      border-radius: 22px;
+      background: #171717;
+      border: 2px solid #262626;
+      box-shadow:
+        0 24px 48px rgba(0,0,0,0.85),
+        inset 0 2px 6px rgba(0,0,0,1),
+        inset 0 -1px 2px rgba(255,255,255,0.03);
+      display: flex;
+      justify-content: center;
+      padding: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* Caution stripes at bottom */
+    .ind-caution {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 36px;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
+      opacity: 0.07;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent, transparent 8px,
+        #000 8px, #000 16px
+      );
+    }
+
+    /* Vertical rail slot */
+    .ind-rail {
+      position: absolute;
+      top: 16px; bottom: 16px;
+      width: 14px;
+      background: #000;
+      border-radius: 100px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,1);
+      border: 1px solid rgba(38,38,38,0.4);
+    }
+    .ind-rail-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 1px;
+      background: rgba(38,38,38,0.5);
+    }
+
+    /* Draggable handle */
+    .ind-handle {
+      position: relative;
+      z-index: 10;
+      width: 64px;
+      height: 82px;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      /* spring-like snap */
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ind-handle:active { cursor: grabbing; }
+
+    .ind-handle-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 11px;
+      background: linear-gradient(180deg, #404040 0%, #262626 100%);
+      box-shadow:
+        0 8px 20px rgba(0,0,0,0.55),
+        inset 0 1px 1px rgba(255,255,255,0.1),
+        inset 0 -1px 1px rgba(0,0,0,0.5);
+      border: 1px solid #404040;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.5s ease, border-color 0.5s ease;
+    }
+    .ind-handle-inner.handle-on {
+      background: linear-gradient(180deg, #2d4f40 0%, #153025 100%);
+      border-color: #2d4f40;
+    }
+
+    /* Grip ridges */
+    .ind-grip {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 40px;
+      opacity: 0.28;
+      margin-bottom: 8px;
+    }
+    .ind-grip-line {
+      height: 2px;
+      width: 100%;
+      background: #000;
+      border-radius: 100px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    /* STANDBY / ONLINE text */
+    .ind-handle-text {
+      position: relative;
+      width: 100%;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ind-text-off,
+    .ind-text-on {
+      position: absolute;
+      font-size: 7.5px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: opacity 0.22s ease;
+      white-space: nowrap;
+    }
+    .ind-text-off { color: #525252; opacity: 1; }
+    .ind-text-on  { color: #34d399; opacity: 0; text-shadow: 0 0 8px rgba(16,185,129,0.9); }
+    .switch-is-on .ind-text-off { opacity: 0; }
+    .switch-is-on .ind-text-on  { opacity: 1; }
+
+    /* OFF / ON side labels */
+    .ind-side-label {
+      position: absolute;
+      font-size: 6.5px;
+      color: #3a3a3a;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      pointer-events: none;
+    }
+    .ind-label-off { top: 24px; right: 5px; }
+    .ind-label-on  { bottom: 24px; right: 5px; }
+
+    /* Floor shadow reflection */
+    .ind-reflection {
+      width: 80px;
+      height: 10px;
+      background: #000;
+      border-radius: 50%;
+      filter: blur(7px);
+      opacity: 0.45;
+      margin-top: 14px;
+    }
+
+    /* Status text beside the switch */
+    .switch-info { flex: 1; }
+    .switch-info-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,0.35);
+      margin-bottom: 0.3rem;
+    }
+    .switch-info-state {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1.5rem;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: rgba(244,239,230,0.5);
+      margin-bottom: 0.35rem;
+      transition: color 0.5s ease;
+    }
+    .switch-info-state.state-online { color: #34d399; }
+    .switch-info-desc {
+      font-size: 0.8rem;
+      line-height: 1.55;
+      color: rgba(244,239,230,0.35);
+      max-width: 180px;
+      transition: color 0.5s ease;
+    }
+    .switch-info-desc.desc-online { color: rgba(244,239,230,0.55); }
+
+    /* ─── NAV ────────────────────────────────────── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      padding: 0 3rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(11,11,11,0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.055);
+    }
+
+    .nav-logo {
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--mustard); }
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 76px 5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-glow {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(200,36,31,0.16) 0%, rgba(232,180,34,0.04) 50%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-bg-line {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.08) 60%, transparent 100%);
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-kicker {
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: riseIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.15s both;
+    }
+
+    .hero-headline {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(3.25rem, 5.8vw, 5.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.025em;
+      color: var(--cream);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: riseIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s both;
+    }
+
+    .hero-headline em   { color: var(--red); font-style: normal; }
+    .hero-headline span { color: var(--mustard); }
+
+    .hero-body {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: rgba(244,239,230,0.55);
+      max-width: 380px;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      animation: riseIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.45s both;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: riseIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.6s both;
+    }
+
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeScaleIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s both;
+    }
+
+    .hero-ring {
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,36,31,0.12);
+    }
+    .hero-ring-2 {
+      width: 380px;
+      height: 380px;
+      border-color: rgba(232,180,34,0.08);
+    }
+
+    .hero-img {
+      width: 100%;
+      max-width: 500px;
+      object-fit: contain;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,0.8)) drop-shadow(0 0 40px rgba(200,36,31,0.2));
+    }
+
+    /* ─── TICKER ─────────────────────────────────── */
+    .ticker {
+      background: var(--red);
+      padding: 0.85rem 0;
+      overflow: hidden;
+    }
+    .ticker-track {
+      display: flex;
+      white-space: nowrap;
+      animation: tickerScroll 28s linear infinite;
+    }
+    .ticker-item {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.88);
+      padding: 0 1.5rem;
+      flex-shrink: 0;
+    }
+    .ticker-dot {
+      color: var(--mustard);
+      padding: 0 0.25rem;
+    }
+
+    /* ─── FEATURES STRIP ─────────────────────────── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid rgba(255,255,255,0.055);
+    }
+    .feature-cell {
+      padding: 2.75rem 2.5rem;
+      border-right: 1px solid rgba(255,255,255,0.055);
+      transition: background 0.25s;
+    }
+    .feature-cell:last-child { border-right: none; }
+    .feature-cell:hover { background: rgba(255,255,255,0.02); }
+
+    .feature-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.9rem;
+      display: block;
+    }
+    .feature-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 0.4rem;
+    }
+    .feature-desc {
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: rgba(244,239,230,0.42);
+    }
+
+    /* ─── SECTION BASE ───────────────────────────── */
+    .section { padding: 7rem 5rem; }
+
+    .section-head {
+      margin-bottom: 3.5rem;
+    }
+    .section-head .label { margin-bottom: 0.9rem; }
+
+    .section-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(2.5rem, 4.5vw, 3.75rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+    }
+    .section-title em { color: var(--red); font-style: normal; }
+
+    /* ─── MENU ───────────────────────────────────── */
+    .menu-section { background: var(--dark-2); }
+
+    .menu-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .menu-sub {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: rgba(244,239,230,0.45);
+      max-width: 300px;
+      text-align: right;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .menu-card {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.055);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+    }
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.55),
+                  0 0 0 1px rgba(200,36,31,0.28);
+      border-color: rgba(200,36,31,0.28);
+    }
+
+    .card-img-wrap {
+      overflow: hidden;
+      position: relative;
+    }
+    .card-img {
+      width: 100%;
+      height: 195px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), filter 0.3s ease;
+      filter: saturate(0.85);
+    }
+    .menu-card:hover .card-img {
+      transform: scale(1.04);
+      filter: saturate(1.05);
+    }
+
+    .card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .card-body { padding: 1.4rem 1.5rem 1.5rem; }
+
+    .card-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mustard);
+      margin-bottom: 0.4rem;
+    }
+    .card-name {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1.3rem;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+    }
+    .card-desc {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: rgba(244,239,230,0.45);
+      margin-bottom: 1.25rem;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1.45rem;
+      color: var(--cream);
+    }
+    .card-price sup {
+      font-size: 0.8rem;
+      font-weight: 700;
+      opacity: 0.5;
+      vertical-align: super;
+    }
+    .card-btn {
+      width: 34px;
+      height: 34px;
+      background: var(--red);
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .card-btn:hover  { background: var(--red-hover); transform: scale(1.12); }
+    .card-btn:active { transform: scale(0.93); }
+    .card-btn:focus-visible { outline: 2px solid var(--mustard); outline-offset: 2px; }
+
+    /* ─── ABOUT ──────────────────────────────────── */
+    .about-section {
+      background: var(--dark);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .about-img-col {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+    }
+    .about-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(25%) contrast(1.05);
+    }
+    .about-img-tint {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200,36,31,0.25) 0%, rgba(0,0,0,0.5) 100%);
+      mix-blend-mode: multiply;
+    }
+    .about-img-border {
+      position: absolute;
+      inset: 1.5rem;
+      border: 1px solid rgba(232,180,34,0.25);
+      pointer-events: none;
+    }
+
+    .about-text-col {
+      padding: 5.5rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-body {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(244,239,230,0.58);
+      margin-bottom: 1.2rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-num {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 2.6rem;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,0.4);
+    }
+
+    /* ─── REVIEWS ────────────────────────────────── */
+    .reviews-section { background: var(--dark-2); }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .review-card {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.055);
+      padding: 2rem 2rem 1.75rem;
+      position: relative;
+      transition: border-color 0.25s, transform 0.25s cubic-bezier(0.22,1,0.36,1);
+    }
+    .review-card:hover {
+      border-color: rgba(200,36,31,0.2);
+      transform: translateY(-3px);
+    }
+
+    .review-quote-mark {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 5rem;
+      line-height: 0.8;
+      color: var(--red);
+      opacity: 0.18;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .review-stars {
+      color: var(--mustard);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.85rem;
+    }
+    .review-text {
+      font-size: 0.9rem;
+      line-height: 1.72;
+      color: rgba(244,239,230,0.68);
+      margin-bottom: 1.5rem;
+    }
+
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .reviewer-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: grayscale(40%);
+      flex-shrink: 0;
+    }
+    .reviewer-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+      text-transform: uppercase;
+    }
+    .reviewer-loc {
+      font-size: 0.78rem;
+      color: rgba(244,239,230,0.38);
+    }
+
+    /* ─── CTA SECTION ────────────────────────────── */
+    .cta-section {
+      background: var(--red);
+      padding: 8rem 5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 50%, rgba(255,255,255,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 50%, rgba(0,0,0,0.15) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .cta-label { color: rgba(255,255,255,0.65); margin-bottom: 1.25rem; display: inline-flex; }
+    .cta-label::before, .cta-label::after { background: rgba(255,255,255,0.4); }
+
+    .cta-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(3rem, 6.5vw, 5.5rem);
+      color: #fff;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .cta-sub {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.72);
+      max-width: 440px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    footer {
+      background: #060606;
+      padding: 2.5rem 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.045);
+    }
+    .footer-logo { height: 40px; object-fit: contain; }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(244,239,230,0.32);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(244,239,230,0.8); }
+    .footer-copy {
+      font-size: 0.78rem;
+      color: rgba(244,239,230,0.22);
+    }
+
+    /* ─── ANIMATIONS ─────────────────────────────── */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeScaleIn {
+      from { opacity: 0; transform: scale(0.94); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 100px 3rem 4rem;
+      }
+      .hero-body    { margin: 0 auto 2rem; }
+      .hero-kicker, .hero-ctas { justify-content: center; }
+      .hero-right   { display: none; }
+      .about-section { grid-template-columns: 1fr; }
+      .about-img-col { display: none; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .features     { grid-template-columns: 1fr 1fr; }
+      .section      { padding: 5rem 3rem; }
+      footer        { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 640px) {
+      .menu-grid  { grid-template-columns: 1fr; }
+      .features   { grid-template-columns: 1fr; }
+      nav { padding: 0 1.5rem; }
+      nav .nav-links { display: none; }
+      .hero { padding: 90px 1.5rem 3rem; }
+      .section { padding: 4rem 1.5rem; }
+      .cta-section { padding: 5rem 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ────────────────────────────────────── -->
+  <nav>
+    <img
+      src="/brand_assets/ChatGPT%20Image%20May%2014%2C%202026%20at%2008_41_10%20PM.png"
+      alt="Connor's Weenies"
+      class="nav-logo"
+    >
+    <ul class="nav-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <a href="#order" class="btn btn-red">Order Now</a>
+  </nav>
+
+
+  <!-- ─── HERO ────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-bg-line"></div>
+
+    <div class="hero-left">
+      <div class="hero-kicker">
+        <span class="label label--left">Est. 2024 · Premium Hot Dogs</span>
+      </div>
+
+      <h1 class="hero-headline">
+        Big<br>
+        <em>Flavor.</em><br>
+        Good<br>
+        <span>Times.</span>
+      </h1>
+
+      <p class="hero-body">
+        Hand-crafted dogs with premium toppings, bold sauces, and zero apologies.
+        This is what a hot dog is supposed to taste like.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="#menu" class="btn btn-red">See Our Menu</a>
+        <a href="#story" class="btn btn-outline">Our Story</a>
+      </div>
+
+      <!-- Industrial Switch — Order Status -->
+      <div class="hero-switch-area" id="indSwitchWrap">
+        <div class="ind-outer">
+          <div class="ind-led led-on" id="indLed"></div>
+          <div class="ind-housing" id="indHousing">
+            <div class="ind-caution"></div>
+            <div class="ind-rail"><div class="ind-rail-line"></div></div>
+            <div class="ind-handle" id="indHandle">
+              <div class="ind-handle-inner handle-on" id="indHandleInner">
+                <div class="ind-grip">
+                  <div class="ind-grip-line"></div>
+                  <div class="ind-grip-line"></div>
+                </div>
+                <div class="ind-handle-text">
+                  <span class="ind-text-off">STANDBY</span>
+                  <span class="ind-text-on">ONLINE</span>
+                </div>
+              </div>
+            </div>
+            <div class="ind-side-label ind-label-off">OFF</div>
+            <div class="ind-side-label ind-label-on">ON</div>
+          </div>
+          <div class="ind-reflection"></div>
+        </div>
+        <div class="switch-info">
+          <div class="switch-info-eyebrow">Order Status</div>
+          <div class="switch-info-state state-online" id="switchState">ONLINE</div>
+          <div class="switch-info-desc desc-online" id="switchDesc">
+            We're open and taking orders today.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-ring"></div>
+      <div class="hero-ring hero-ring-2"></div>
+      <img
+        src="/brand_assets/ChatGPT%20Image%20May%2014%2C%202026%20at%2008_41_10%20PM.png"
+        alt="Connor's Weenies mascot — thumbs-up hot dog character"
+        class="hero-img"
+      >
+    </div>
+  </section>
+
+
+  <!-- ─── TICKER ───────────────────────────────────── -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+
+  <!-- ─── FEATURES STRIP ───────────────────────────── -->
+  <div class="features">
+    <div class="feature-cell">
+      <span class="feature-icon">🌭</span>
+      <div class="feature-name">All-Beef Dogs</div>
+      <div class="feature-desc">100% premium all-beef, char-grilled to order. No fillers, ever.</div>
+    </div>
+    <div class="feature-cell">
+      <span class="feature-icon">🔥</span>
+      <div class="feature-name">Fresh Daily</div>
+      <div class="feature-desc">Every topping prepped from scratch each morning. No shortcuts.</div>
+    </div>
+    <div class="feature-cell">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-name">Fast as Hell</div>
+      <div class="feature-desc">Ready in under 5 minutes. Because hunger doesn't wait.</div>
+    </div>
+    <div class="feature-cell">
+      <span class="feature-icon">🏆</span>
+      <div class="feature-name">Local Favorite</div>
+      <div class="feature-desc">Voted best street dog three years running. We accept tips.</div>
+    </div>
+  </div>
+
+
+  <!-- ─── MENU ────────────────────────────────────── -->
+  <section class="section menu-section" id="menu">
+    <div class="menu-head">
+      <div>
+        <div class="label label--left" style="margin-bottom:0.9rem;">The Menu</div>
+        <h2 class="section-title">The <em>Dogs</em></h2>
+      </div>
+      <p class="menu-sub">
+        Every dog hand-crafted to order. Real ingredients,
+        real flavor. Pick your weapon.
+      </p>
+    </div>
+
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img src="https://placehold.co/600x400/1e1208/c8241f?text=The+Classic" alt="The Classic" class="card-img">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">The Original</div>
+          <div class="card-name">The Classic</div>
+          <div class="card-desc">Yellow mustard, relish, diced white onion. No nonsense. The OG that started it all.</div>
+          <div class="card-footer">
+            <div class="card-price"><sup>$</sup>6.99</div>
+            <button class="card-btn" aria-label="Add The Classic to order">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img src="https://placehold.co/600x400/0d1520/4a8fd4?text=The+Chicago" alt="The Chicago" class="card-img">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">City Legend</div>
+          <div class="card-name">The Chicago</div>
+          <div class="card-desc">Sport peppers, tomato wedges, neon relish, celery salt, mustard, dill pickle. Dragged through the garden.</div>
+          <div class="card-footer">
+            <div class="card-price"><sup>$</sup>8.49</div>
+            <button class="card-btn" aria-label="Add The Chicago to order">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img src="https://placehold.co/600x400/1a0a04/e8b422?text=BBQ+Banger" alt="The BBQ Banger" class="card-img">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Fan Favorite</div>
+          <div class="card-name">The BBQ Banger</div>
+          <div class="card-desc">House BBQ sauce, caramelized onions, crispy shallots, smoked cheddar. Sweet, smoky, addictive.</div>
+          <div class="card-footer">
+            <div class="card-price"><sup>$</sup>9.49</div>
+            <button class="card-btn" aria-label="Add The BBQ Banger to order">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img src="https://placehold.co/600x400/1a0404/c8241f?text=Chili+Bomb" alt="The Chili Bomb" class="card-img">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Game Day</div>
+          <div class="card-name">The Chili Bomb</div>
+          <div class="card-desc">House chili, sharp cheddar, diced white onion, pickled jalapeños, sour cream. Bring napkins.</div>
+          <div class="card-footer">
+            <div class="card-price"><sup>$</sup>9.99</div>
+            <button class="card-btn" aria-label="Add The Chili Bomb to order">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img src="https://placehold.co/600x400/1a1004/c8a432?text=Bacon+Bomb" alt="The Bacon Bomb" class="card-img">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Indulgent</div>
+          <div class="card-name">The Bacon Bomb</div>
+          <div class="card-desc">Bacon-wrapped dog, maple Dijon, pickled red onion, peppery arugula. Fancy. Still a hot dog.</div>
+          <div class="card-footer">
+            <div class="card-price"><sup>$</sup>10.49</div>
+            <button class="card-btn" aria-label="Add The Bacon Bomb to order">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img src="https://placehold.co/600x400/091509/4a8f4a?text=The+Veggie" alt="The Veggie" class="card-img">
+          <div class="card-img-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Plant-Based</div>
+          <div class="card-name">The Veggie</div>
+          <div class="card-desc">Plant-based dog, avocado crema, pico de gallo, fresh lime, cilantro. Skeptics welcome.</div>
+          <div class="card-footer">
+            <div class="card-price"><sup>$</sup>8.99</div>
+            <button class="card-btn" aria-label="Add The Veggie to order">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ─── ABOUT ────────────────────────────────────── -->
+  <section class="about-section" id="story">
+    <div class="about-img-col">
+      <img
+        src="https://placehold.co/700x900/1a0f08/c8241f?text=Connor%27s+Story"
+        alt="Connor's Weenies kitchen"
+        class="about-img"
+      >
+      <div class="about-img-tint"></div>
+      <div class="about-img-border"></div>
+    </div>
+    <div class="about-text-col">
+      <div class="label label--left" style="margin-bottom:0.9rem;">Our Story</div>
+      <h2 class="section-title" style="margin-bottom:1.5rem;">
+        Hot Dogs<br>Done <em>Right.</em>
+      </h2>
+      <p class="about-body">
+        Connor's started at a Saturday farmer's market with a beat-up cart, a cooler
+        of all-beef dogs, and a jar of house-made mustard. The line wrapped around
+        the block by noon.
+      </p>
+      <p class="about-body">
+        We don't believe in shortcuts. Every sauce is made from scratch. Every dog
+        is fresh. Every single order gets the same love as the first one we ever sold.
+      </p>
+      <a href="#order" class="btn btn-red" style="margin-top:0.75rem; align-self:flex-start;">Find Us</a>
+
+      <div class="stats-row">
+        <div>
+          <div class="stat-num">12K+</div>
+          <div class="stat-label">Dogs Served</div>
+        </div>
+        <div>
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Avg. Rating</div>
+        </div>
+        <div>
+          <div class="stat-num">6</div>
+          <div class="stat-label">Signature Dogs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── REVIEWS ──────────────────────────────────── -->
+  <section class="section reviews-section" id="reviews">
+    <div class="section-head">
+      <div class="label label--left">Happy Customers</div>
+      <h2 class="section-title" style="margin-top:0.9rem;">What They're<br><em>Saying</em></h2>
+    </div>
+
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <span class="review-quote-mark">"</span>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          "I don't even like hot dogs. Or I didn't. Connor's changed that forever.
+          The BBQ Banger is genuinely one of the best things I've eaten all year."
+        </p>
+        <div class="reviewer">
+          <img src="https://placehold.co/80x80/2a1a0e/c8241f?text=JM" alt="Jake M." class="reviewer-avatar">
+          <div>
+            <div class="reviewer-name">Jake M.</div>
+            <div class="reviewer-loc">Chicago, IL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <span class="review-quote-mark">"</span>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          "The Chili Bomb is absolutely unhinged — in the best possible way.
+          We drove 40 minutes specifically for this and would do it again tomorrow."
+        </p>
+        <div class="reviewer">
+          <img src="https://placehold.co/80x80/2a1a0e/c8241f?text=SR" alt="Sarah R." class="reviewer-avatar">
+          <div>
+            <div class="reviewer-name">Sarah R.</div>
+            <div class="reviewer-loc">Evanston, IL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <span class="review-quote-mark">"</span>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          "Fresh, fast, and genuinely delicious. Connor's proves that the simplest
+          food done with real care beats most sit-down spots in the city."
+        </p>
+        <div class="reviewer">
+          <img src="https://placehold.co/80x80/2a1a0e/c8241f?text=DK" alt="David K." class="reviewer-avatar">
+          <div>
+            <div class="reviewer-name">David K.</div>
+            <div class="reviewer-loc">Oak Park, IL</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ─── ORDER CTA ─────────────────────────────────── -->
+  <section class="cta-section" id="order">
+    <div class="cta-bg"></div>
+    <div class="label cta-label">Ready to Eat?</div>
+    <h2 class="cta-title">Get Your<br>Weenie Today.</h2>
+    <p class="cta-sub">
+      Find us at the market every Saturday and Sunday, or order online for pickup.
+      Satisfaction guaranteed — or we'll make you another one.
+    </p>
+    <a href="#" class="btn btn-white">Order Online →</a>
+  </section>
+
+
+  <!-- ─── FOOTER ────────────────────────────────────── -->
+  <footer>
+    <img
+      src="/brand_assets/ChatGPT%20Image%20May%2014%2C%202026%20at%2008_41_10%20PM.png"
+      alt="Connor's Weenies"
+      class="footer-logo"
+    >
+    <ul class="footer-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#story">About</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#order">Order</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Connor's Weenies. Big Flavor. Good Times.</div>
+  </footer>
+
+
+  <script>
+    // Ticker
+    (function() {
+      const items = [
+        'Big Flavor', 'Good Times', 'All-Beef Dogs', 'Hand-Crafted',
+        'Fresh Daily', 'Order Now', 'Chicago Style', 'BBQ Banger',
+        'Chili Bomb', 'Bacon Wrapped', 'Zero Apologies', 'Since 2024',
+      ];
+      const track = document.getElementById('tickerTrack');
+      for (let i = 0; i < 4; i++) {
+        items.forEach(item => {
+          const s = document.createElement('span');
+          s.className = 'ticker-item';
+          s.innerHTML = item + '<span class="ticker-dot"> · </span>';
+          track.appendChild(s);
+        });
+      }
+    })();
+
+    // ── Industrial Switch ──────────────────────────
+    (function() {
+      const wrap      = document.getElementById('indSwitchWrap');
+      const handle    = document.getElementById('indHandle');
+      const inner     = document.getElementById('indHandleInner');
+      const led       = document.getElementById('indLed');
+      const stateEl   = document.getElementById('switchState');
+      const descEl    = document.getElementById('switchDesc');
+
+      // MAX_TRAVEL = housing-height(156) - 2*border(4) - 2*padding(16) - handle-height(82) = 54px
+      const MAX_TRAVEL = 54;
+      let isOn         = true;   // start ON
+      let isDragging   = false;
+      let hasMoved     = false;
+      let startY       = 0;
+      let startTY      = MAX_TRAVEL; // current translateY
+      let currentTY    = MAX_TRAVEL;
+
+      function setVisualState(on) {
+        currentTY = on ? MAX_TRAVEL : 0;
+        handle.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        handle.style.transform  = `translateY(${currentTY}px)`;
+
+        if (on) {
+          led.classList.add('led-on');
+          inner.classList.add('handle-on');
+          wrap.classList.add('switch-is-on');
+          stateEl.textContent = 'ONLINE';
+          stateEl.classList.add('state-online');
+          descEl.textContent  = "We're open and taking orders today.";
+          descEl.classList.add('desc-online');
+        } else {
+          led.classList.remove('led-on');
+          inner.classList.remove('handle-on');
+          wrap.classList.remove('switch-is-on');
+          stateEl.textContent = 'STANDBY';
+          stateEl.classList.remove('state-online');
+          descEl.textContent  = 'Ordering unavailable right now.';
+          descEl.classList.remove('desc-online');
+        }
+        isOn = on;
+      }
+
+      // Initialise
+      handle.style.transform = `translateY(${MAX_TRAVEL}px)`;
+      handle.style.transition = 'none';
+
+      // ── Drag ────────────────────────────────────
+      handle.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        isDragging = true;
+        hasMoved   = false;
+        startY     = e.clientY;
+        startTY    = currentTY;
+        handle.style.transition = 'none';
+        handle.setPointerCapture(e.pointerId);
+      });
+
+      handle.addEventListener('pointermove', function(e) {
+        if (!isDragging) return;
+        const dy = e.clientY - startY;
+        if (Math.abs(dy) > 4) hasMoved = true;
+        currentTY = Math.max(0, Math.min(MAX_TRAVEL, startTY + dy));
+        handle.style.transform = `translateY(${currentTY}px)`;
+      });
+
+      handle.addEventListener('pointerup', function() {
+        if (!isDragging) return;
+        isDragging = false;
+        if (hasMoved) {
+          setVisualState(currentTY > MAX_TRAVEL / 2);
+        } else {
+          setVisualState(!isOn);
+        }
+      });
+
+      // Housing click (outside handle) also toggles
+      document.getElementById('indHousing').addEventListener('click', function(e) {
+        if (e.target === handle || handle.contains(e.target)) return;
+        setVisualState(!isOn);
+      });
+    })();
+
+    // Scroll-reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.menu-card, .review-card, .feature-cell').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.06}s`;
+      obs.observe(el);
+    });
+  </script>
+
+  <!-- ─── FALLING HOT DOGS ──────────────────────────────────────── -->
+  <div id="hotdog-layer" style="position:fixed;inset:0;pointer-events:none;z-index:48;overflow:hidden;"></div>
+  <script>
+    (function() {
+      const layer = document.getElementById('hotdog-layer');
+      const MAX_DOGS = 20;
+      const SPAWN_MS = 800;
+      let dogs = [];
+      let nextId = 0;
+      let lastSpawn = 0;
+
+      const HOT_DOG_SVG = `<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" width="100" height="50">
+        <defs>
+          <linearGradient id="hd-bun-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#D4924A"/>
+            <stop offset="100%" stop-color="#A0622A"/>
+          </linearGradient>
+          <linearGradient id="hd-sau-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B84A2A"/>
+            <stop offset="100%" stop-color="#8B2A14"/>
+          </linearGradient>
+        </defs>
+        <!-- bottom bun -->
+        <ellipse cx="50" cy="37" rx="44" ry="11" fill="url(#hd-bun-g)" opacity="0.95"/>
+        <!-- sausage -->
+        <ellipse cx="50" cy="25" rx="38" ry="8" fill="url(#hd-sau-g)"/>
+        <!-- top bun -->
+        <ellipse cx="50" cy="13" rx="44" ry="11" fill="url(#hd-bun-g)" opacity="0.95"/>
+        <!-- sesame seeds -->
+        <ellipse cx="28" cy="9" rx="3" ry="1.5" fill="#C88030" opacity="0.7" transform="rotate(-20 28 9)"/>
+        <ellipse cx="50" cy="6" rx="3" ry="1.5" fill="#C88030" opacity="0.7"/>
+        <ellipse cx="68" cy="9" rx="3" ry="1.5" fill="#C88030" opacity="0.7" transform="rotate(20 68 9)"/>
+        <!-- mustard zigzag -->
+        <polyline points="14,24 20,21 26,24 32,21 38,24 44,21 50,24 56,21 62,24 68,21 74,24 80,21 86,24"
+          fill="none" stroke="#FFD700" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- ketchup zigzag -->
+        <polyline points="14,28 20,31 26,28 32,31 38,28 44,31 50,28 56,31 62,28 68,31 74,28 80,31 86,28"
+          fill="none" stroke="#DC143C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+
+      function spawnDog() {
+        if (dogs.length >= MAX_DOGS) return;
+        const scale = rand(0.25, 0.55);
+        const dog = {
+          id: nextId++,
+          x: rand(0, window.innerWidth - 100 * scale),
+          y: -60 * scale,
+          rotation: rand(0, 360),
+          scale,
+          speed: rand(0.6, 1.6),
+          wobble: rand(-6, 6),
+          el: null,
+        };
+        const el = document.createElement('div');
+        el.style.cssText = `
+          position: absolute;
+          width: ${100 * scale}px;
+          height: ${50 * scale}px;
+          left: ${dog.x}px;
+          top: ${dog.y}px;
+          transform: rotate(${dog.rotation}deg);
+          opacity: 0.38;
+          will-change: transform, top, left;
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        `;
+        el.innerHTML = HOT_DOG_SVG;
+        el.querySelector('svg').style.cssText = `width:100%;height:100%;`;
+        layer.appendChild(el);
+        dog.el = el;
+        dogs.push(dog);
+      }
+
+      function tick(ts) {
+        const h = window.innerHeight;
+        if (ts - lastSpawn > SPAWN_MS) {
+          spawnDog();
+          lastSpawn = ts;
+        }
+        dogs = dogs.filter(dog => {
+          dog.y += dog.speed;
+          dog.rotation += dog.speed * 0.5;
+          dog.x += Math.sin(dog.y * 0.01) * Math.abs(dog.wobble) * 0.1;
+          if (dog.y > h + 200) {
+            dog.el.remove();
+            return false;
+          }
+          dog.el.style.top  = dog.y + 'px';
+          dog.el.style.left = dog.x + 'px';
+          dog.el.style.transform = `rotate(${dog.rotation}deg)`;
+          return true;
+        });
+        requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
